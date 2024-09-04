@@ -1,12 +1,13 @@
 import React from 'react';
-import MainPage from './page/homepage';
+import Public from './components/Public';
+import Private from './components/Private';
+import useAuth from './hooks/useAuth';
 
 
 function App() {
-  return (
-    <div className="App">
-      <MainPage></MainPage>
-    </div>
+  const isLogin = useAuth();
+  return (    
+      isLogin ? <Private /> : <Public/>
   );
 }
 
