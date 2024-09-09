@@ -11,3 +11,14 @@
     --pf-global--primary-color--100: var(--pf-global--palette--purple-600);
     --pf-global--primary-color--200: var(--pf-global--palette--purple-700);
 }
+
+/* 관리자화면 숨기기해보기 */
+#kc-info {
+    display: none;
+}
+
+.login-pf-page .login-pf-settings{
+    display: none;
+}
+
+
