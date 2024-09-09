@@ -28,5 +28,6 @@ services:
       - "8181:8080"
     volumes:
       - ./docker/keycloak/realms/:/opt/keycloak/data/import/
+      - ./docker/keycloak/themes/:/opt/keycloak/themes/
     depends_on:
       - keycloak-mysql
