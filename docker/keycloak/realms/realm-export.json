@@ -89,6 +89,22 @@
         "attributes": {}
       },
       {
+        "id": "106f2b45-f281-410b-a8bf-293b4c628c67",
+        "name": "admin",
+        "description": "Admin Role",
+        "composite": true,
+        "composites": {
+          "client": {
+            "admin-client": [
+              "admin-only"
+            ]
+          }
+        },
+        "clientRole": false,
+        "containerId": "3b857ae3-3628-45fb-8536-cc389ca1b5fa",
+        "attributes": {}
+      },
+      {
         "id": "cbd05dbf-22fb-43fa-9ed4-8ef76b42802a",
         "name": "user",
         "description": "User Role",
@@ -109,6 +125,17 @@
       }
     ],
     "client": {
+      "admin-client": [
+        {
+          "id": "4e842ebd-ef09-4a40-bf85-38bedc7b2ea1",
+          "name": "admin-only",
+          "description": "Admin Only",
+          "composite": false,
+          "clientRole": true,
+          "containerId": "e40bed73-3374-4a1a-851a-9dd133cfe879",
+          "attributes": {}
+        }
+      ],
       "realm-management": [
         {
           "id": "d5532a8b-da88-4fe6-ab7e-cb05653622c6",
@@ -632,6 +659,68 @@
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": false,
       "nodeReRegistrationTimeout": 0,
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "roles",
+        "profile",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "id": "e40bed73-3374-4a1a-851a-9dd133cfe879",
+      "clientId": "admin-client",
+      "name": "Admin Client",
+      "description": "for admin",
+      "rootUrl": "",
+      "adminUrl": "",
+      "baseUrl": "http://localhost:3001",
+      "surrogateAuthRequired": false,
+      "enabled": true,
+      "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
+      "redirectUris": [
+        "http://localhost:3001/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3001"
+      ],
+      "notBefore": 0,
+      "bearerOnly": false,
+      "consentRequired": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "publicClient": true,
+      "frontchannelLogout": true,
+      "protocol": "openid-connect",
+      "attributes": {
+        "login_theme": "adminTheme",
+        "post.logout.redirect.uris": "http://localhost:3001/*",
+        "oauth2.device.authorization.grant.enabled": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "use.refresh.tokens": "true",
+        "oidc.ciba.grant.enabled": "false",
+        "client.use.lightweight.access.token.enabled": "false",
+        "backchannel.logout.session.required": "true",
+        "client_credentials.use_refresh_token": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "require.pushed.authorization.requests": "false",
+        "acr.loa.map": "{}",
+        "display.on.consent.screen": "false",
+        "pkce.code.challenge.method": "S256",
+        "token.response.type.bearer.lower-case": "false"
+      },
+      "authenticationFlowBindingOverrides": {},
+      "fullScopeAllowed": true,
+      "nodeReRegistrationTimeout": -1,
       "defaultClientScopes": [
         "web-origins",
         "acr",
