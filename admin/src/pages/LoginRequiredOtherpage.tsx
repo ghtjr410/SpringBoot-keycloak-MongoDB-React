@@ -6,7 +6,7 @@ interface Props {
     keycloak: Keycloak | null;
 }
 
-const Homepage:React.FC<Props> = ({keycloak}) => {
+const Otherpage:React.FC<Props> = ({keycloak}) => {
     const [userInfo, setUserInfo] = useState<null | Record<string, any>>(null);
     const [roles, setRoles] = useState<string[] | null>(null);
     const navigate = useNavigate();
@@ -14,12 +14,12 @@ const Homepage:React.FC<Props> = ({keycloak}) => {
     const handleSignout = () => {
         keycloak?.logout();
     }
-    const handleOtherpage = () => {
-        navigate("/other");
+    const handleHomepage = () => {
+        navigate("/");
     };
 
-    console.log("홈페이지 : 인증여부 - " + keycloak?.authenticated);
-    console.log("홈페이지 : 객체 - " + keycloak);
+    console.log("Otherpage : 인증여부 - " + keycloak?.authenticated);
+    console.log("Otherpage : 객체 - " + keycloak);
 
     useEffect(()=> {
         if(keycloak?.authenticated) {
@@ -59,7 +59,7 @@ const Homepage:React.FC<Props> = ({keycloak}) => {
 
     return(
         <div className="flex flex-col">
-            <h1>관리자 홈페이지</h1>
+            <h1>관리자 Otherpage</h1>
             <h1>1 : {userInfo ? JSON.stringify(userInfo) : "Loading user info..."}</h1>
             <h2>2 : 사용자 역할: {adminRole?.length ? adminRole.join(", ") : "No admin role"}</h2>
             <h1>-----------------------------------------------------------------</h1>
@@ -74,9 +74,9 @@ const Homepage:React.FC<Props> = ({keycloak}) => {
             <h1>8 : {keycloak?.refreshToken ? keycloak.refreshToken : "No Refresh Token"}</h1>
             <h1>9 : {keycloak?.realm}</h1>
             <button className="bg-blue-400 w-24" onClick={handleSignout}>로그아웃</button>
-            <button className="bg-green-400 w-24" onClick={handleOtherpage}>Other page</button>
+            <button className="bg-green-400 w-24" onClick={handleHomepage}>Home Page</button>
         </div>
     )
 }
 
-export default Homepage;
+export default Otherpage;

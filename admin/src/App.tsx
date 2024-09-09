@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { KEYCLOAK_URL } from './utils/APIUrlUtil/apiUrlUtil';
 import { Route, Routes } from 'react-router-dom';
 import Homepage from './pages/LoginRequiredHomepage';
+import Otherpage from './pages/LoginRequiredOtherpage';
 
 
 function App() {
@@ -37,9 +38,8 @@ function App() {
         <h1 className='text-2xl font-bold'>관리자 사이트</h1>
       </header>
       <Routes>
-      
-      <Route path='/' element={<Homepage keycloak={keycloak}/>}/>
-
+        <Route path='/' element={<Homepage keycloak={keycloak}/>}/>
+        <Route path='/other' element={<Otherpage keycloak={keycloak}/>}/>
       </Routes>
     </div>
   );
