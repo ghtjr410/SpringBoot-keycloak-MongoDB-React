@@ -1,0 +1,15 @@
+#kc-header {
+    color:black;
+    font-weight: bold;
+}
+
+.login-pf body {
+    background-color: #ffffff; /* 흰색 배경 */
+    background: none; /*다른 배경 요소 제거*/
+    height: 100%;
+}
+
+:root{
+    --pf-global--primary-color--100: var(--pf-global--palette--purple-600);
+    --pf-global--primary-color--200: var(--pf-global--palette--purple-700);
+}
