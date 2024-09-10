@@ -1,4 +1,4 @@
-package com.ghtjr.gateway.rotues;
+package com.ghtjr.gateway.routes;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions;

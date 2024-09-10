@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import Keycloak from 'keycloak-js';
+import axios from 'axios';
 
 interface Props {
     keycloak: Keycloak | null;
@@ -11,6 +12,32 @@ const CheckSsoMypage:React.FC<Props> = ({keycloak}) => {
     const [userInfo, setUserInfo] = useState<null | Record<string, any>>(null);
     const [isValidToken, setValidToken] = useState<boolean>(false);
     const navigate = useNavigate();
+
+    const handleGetUserProfile = async () => {
+        if (keycloak?.authenticated) {
+          const userId = keycloak.subject; // Keycloak에서 UUID 추출
+          try {
+            const response = await axios.get(`http://localhost:8080/api/user-profile/${userId}`);
+            console.log('GET Response:', response.data);
+          } catch (error) {
+            console.error('GET Error:', error);
+          }
+        }
+      };
+    
+      const handlePostUserProfile = async () => {
+        if (keycloak?.authenticated) {
+          const userId = keycloak.subject; // Keycloak에서 UUID 추출
+          try {
+            const response = await axios.post(`http://localhost:8080/api/user-profile/${userId}`, {
+              bio: '안녕하세요, 이것은 새로운 bio입니다.',
+            });
+            console.log('POST Response:', response.data);
+          } catch (error) {
+            console.error('POST Error:', error);
+          }
+        }
+      };
 
 
     const handleSignout = () => {
@@ -93,6 +120,14 @@ const CheckSsoMypage:React.FC<Props> = ({keycloak}) => {
 
     return (
         <div className="flex flex-col">
+        <div className="flex flex-col">
+            <button onClick={handleGetUserProfile} className="bg-blue-400 w-24">
+            GET UserProfile
+            </button>
+            <button onClick={handlePostUserProfile} className="bg-green-400 w-24">
+            POST UserProfile
+            </button>
+        </div>
             { isValidToken ? (
                 <p>로딩 중...</p>
             ) : (
