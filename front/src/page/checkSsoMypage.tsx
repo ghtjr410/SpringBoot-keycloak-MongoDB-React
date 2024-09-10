@@ -16,8 +16,13 @@ const CheckSsoMypage:React.FC<Props> = ({keycloak}) => {
     const handleGetUserProfile = async () => {
         if (keycloak?.authenticated) {
           const userId = keycloak.subject; // Keycloak에서 UUID 추출
+          const token = keycloak.token; // Keycloak 토큰 추출
           try {
-            const response = await axios.get(`http://localhost:8080/api/user-profile/${userId}`);
+            const response = await axios.get(`http://localhost:8080/api/user-profile/${userId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
             console.log('GET Response:', response.data);
           } catch (error) {
             console.error('GET Error:', error);
