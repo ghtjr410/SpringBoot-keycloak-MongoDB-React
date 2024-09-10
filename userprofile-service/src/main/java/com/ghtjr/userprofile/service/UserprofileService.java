@@ -29,4 +29,15 @@ public class UserprofileService {
                 savedUserprofile.getBlogTitle()
         );
     }
+
+    public UserprofileResponse getUserProfile(String uuid) {
+        Userprofile userprofile = userprofileRepository.findById(uuid)
+                .orElseThrow(() -> new RuntimeException("User profile not found"));
+
+        return new UserprofileResponse(
+                userprofile.getUuid(),
+                userprofile.getBio(),
+                userprofile.getBlogTitle()
+        );
+    }
 }
