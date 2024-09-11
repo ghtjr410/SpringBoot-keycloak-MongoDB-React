@@ -18,6 +18,7 @@ public class Routes {
     public RouterFunction<ServerResponse> userprofileServiceRoute() {
         return GatewayRouterFunctions.route("userprofile_service")
                 .route(RequestPredicates.path("/api/user/user-profile/**"), HandlerFunctions.http(userprofileServiceUrl))
+                .route(RequestPredicates.path("/api/admin/user-profile/**"), HandlerFunctions.http(userprofileServiceUrl))
                 .build();
     }
 }

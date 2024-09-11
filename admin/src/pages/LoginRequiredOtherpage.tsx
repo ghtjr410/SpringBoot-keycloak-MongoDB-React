@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Keycloak from "keycloak-js";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface Props {
     keycloak: Keycloak | null;
@@ -10,6 +11,39 @@ const Otherpage:React.FC<Props> = ({keycloak}) => {
     const [userInfo, setUserInfo] = useState<null | Record<string, any>>(null);
     const [roles, setRoles] = useState<string[] | null>(null);
     const navigate = useNavigate();
+
+    const handleGetUserProfile = async () => {
+        if (keycloak?.authenticated) {
+          const userId = keycloak.subject; // Keycloak에서 UUID 추출
+          const token = keycloak.token; // Keycloak 토큰 추출
+          try {
+            const response = await axios.get(`http://localhost:8080/api/admin/user-profile/${userId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            console.log('GET Response:', response.data);
+          } catch (error) {
+            console.error('GET Error:', error);
+          }
+        }
+    };
+    
+    const handlePostUserProfile = async () => {
+        if (keycloak?.authenticated) {
+            const userId = keycloak.subject; // Keycloak에서 UUID 추출
+            const token = keycloak.token; // Keycloak 토큰 추출
+            try {
+                const response = await axios.post(`http://localhost:8080/api/admin/user-profile/${userId}`, 
+                    { bio: '안녕하세요, 이것은 새로운 bio입니다.' },
+                    { headers: { Authorization: `Bearer ${token}` } } // 토큰 추가
+                );
+                console.log('POST Response:', response.data);
+            } catch (error) {
+                console.error('POST Error:', error);
+            }
+        }
+    };
     
     const handleSignout = () => {
         keycloak?.logout();
@@ -59,6 +93,14 @@ const Otherpage:React.FC<Props> = ({keycloak}) => {
 
     return(
         <div className="flex flex-col">
+        <div className="flex flex-col">
+            <button onClick={handleGetUserProfile} className="bg-blue-400 w-24">
+            GET UserProfile
+            </button>
+            <button onClick={handlePostUserProfile} className="bg-green-400 w-24">
+            POST UserProfile
+            </button>
+        </div>
             <h1>관리자 Otherpage</h1>
             <h1>1 : {userInfo ? JSON.stringify(userInfo) : "Loading user info..."}</h1>
             <h2>2 : 사용자 역할: {adminRole?.length ? adminRole.join(", ") : "No admin role"}</h2>
