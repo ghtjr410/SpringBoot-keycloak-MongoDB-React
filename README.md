@@ -9,7 +9,122 @@ React를 프론트엔드로, Spring Boot를 백엔드로 사용하며, 데이터
 - **Backend**: Spring Boot, Spring Security, Keycloak
 - **Database**: MongoDB
 - **Authentication**: Keycloak (OAuth2, OpenID Connect)
+------------------------------------------------------------
+실제 진행상황이고 임시파일입니다. 나중에 수정할예정
 
+1. login-required랑 check-sso 적용해보기 페이지 나눠서 
+	ㄴ 둘은 공존하지 못한다 그이유
+2. 상태관리 끝
+	ㄴ keycloak 프로퍼티 전부 호출해서 어떤값을 사용할 수 있는지 테스트
+3. 회원가입 창 커스터마이징
+	ㄴ firstname, lastname 삭제 nickname 추가
+4. A B C 통합 상태관리 app.tsx에서 객체생성하고 부여받기
+	ㄴ 각 페이지별로 객체를 생성하면 keycloak객체는 한번만 생성해야한다는 에러메시지가뜸
+5.토큰유무랑 토큰 만료랑은 관련없은 토큰만료가 문제임
+	ㄴ 토큰은 존재하지만 토큰만료가 뜨면 api호출 인증불가 
+6. 세션은 유지되고있는데 토큰이 재발급이안됨
+	ㄴ keycloak?.authenticated가 true 에도 서버측에서 로그인상태인지, 세션유지중인지 유무이지
+	ㄴ 토큰재발급은 보통 자동으로 처리되지만 여러가지이유 (다른탭, 네트워크, 등등) 으로 재발급못받았을때는
+	ㄴ 수동으로 재발급받아야함 
+	ㄴ keycloak.updateToken(30)으로 30초 미만일때 재발급을 받을수있는 요청을할수있지만
+	ㄴ keycloak.updateToeken(30)은 클라이언트측에서 검사하는것이기때문에 지연이 발생한다기보단
+	ㄴ 토큰이 만료기간이 다되었거나 없을경우에만 요청하기때문에 
+	ㄴ 토큰 재발급문제를 해결하기위해서 keycloak.updateToken(30)을 요청마다 넣어주는편이 낫다.
+7. chrome 시크릿모드, 일반 브라우저에서 다르게 동작되는 이유?
+	ㄴ 쿠키 서드파티문제? 크롬은 이제 서드파티를 지원을 안한다?
+	ㄴ 해결방법 pkce < 정답
+	ㄴ https://keycloak.discourse.group/t/keycloak-cookies-issue-in-chrome-incognito-mode/8292/6
+	ㄴ https://skycloak.io/keycloak-how-to-create-a-pkce-authorization-flow-client/
+8. 롤설정 A클라이언트 회원가입하는 유저에게 user role을 부여
+9. A클라이언트 user롤에 delete accunt 권한 부여
+10. api 요청으로 구현하기가 빡세다
+	ㄴ keycloak에서는 사용자 계정 삭제 API를 직접적으로 사용하는 방법을 제공하지않는다
+	ㄴ 대신 Application Intiated Action(AIA) 기능을 사용하여 민감한 작업을 처리할수있도록
+	UI를 제공하고있다.
+	ㄴ account-console은 pkce랑 S256이 기본값임 그래서 무조건 호출할때 생성을해야함그거를 
+11 이게 더편함. service-client를 account-console과 같은기능을하게한다면? 재인증필요없고 회원탈퇴후에 바로 리디렉션될거잖아
+12 리디렉션하는거 homeURL을 localhost/3000으로하면그만이엇어~
+13 kc-action 재인증 없애기 못없애 빡세 이거는 그냥 냅두고 그냥 테마만 바꾸면되서
+14 비밀번호재설정은 Update Password이고 이것은 Required Action이라서 필수제공이라 권한부여가 필요없음
+Delete Account랑 Update Password는 차이점이 존재함 권한에있어서
+	ㄴ 성공
+15. 페이지를 결국 커스텀해야하긴해 그단계가 일찍왔다하고
+	ㄴ 해당페이지 경로의 파일을 내 로컬파일에 마운트시키고 변경해야함
+
+16. docker desktop files readme에 있는 것을 따르는게 맞아보임
+딱하나만 변경되면 모든게 수월해지긴함~
+
+17. 커스텀 마운트해보자 페이지 커스텀하기 -> css
+18. 한글로 바꾸기 -> message? ko? 
+
+끝 테마변경은 여기서 스탑	
+---------------------------------------------------------------
+
+1. 클라이언트 생성
+2. 관리자 객체생성 로그인창 회원가입창 잘연동
+3. 롤추출완료
+	ㄴ client에 admin-only realm에 admin한다음에 admin에 admin-only 넣어주고
+		ㄴ 해당사용자에게 admin 넣어주면 끝
+4. 회원가입창을 클라이언트 별로 설정할 수 있는지
+	ㄴ 해당 클라이언트의 회원가입 폼에 그냥 display none갈기면됌
+	ㄴ admin-client 로그인테마바꾸면됌
+	ㄴ 마스터관리자가 계정을 생성하는 방식으로 결정 (관리자 페이지, Grafana)
+5. 로그인시킨다음에 해당 로그인의 role에 admin이없으면 로그아웃시키기
+6. 아예로그인할때 롤을 확인해서 막을수는없는지 < 안될확률 높음 AIA방식으로하는거라 내부로직건드려야댐
+	ㄴ 안됨 인증과 권한은 다른문제임
+7. admin 롤 부여한 아이디로 로그인
+8. 로그아웃 만들기
+9. 페이지 연결성확인 
+	ㄴ 2.1 Otherpage 제작
+	ㄴ 2.2 Otherpage 버튼 만들기
+	ㄴ 2.3 homepage 버튼 만들기
+10. 크롬시크릿모드도 되는지 확인해야돼
+
+클라이언트 사이드 권한 관리는 끝
+--------------------------------------------------------------
+1. mongodb 생성후 안에 값을 볼 수 있어야댐 dbeaver로 
+2. user-profile 서버를 만든후 postman으로 crud를 확인해야됌
+3. 프로필을 그냥 접속했을때 없으면 비워두고 있으면 넣으면그만
+	ㄴ 그리고 생성버튼누르면 업데이트든 생성이든 두개다 처리할수있음
+4. 회원탈퇴 Keycloak Event Listener SPI?
+	ㄴ 방식을 생각해야되긴함
+	ㄴ 문구로 때우면됨
+		회원 탈퇴 시 작성하신 게시글과 댓글은 삭제되지 않으며, 그대로 유지됩니다. 다른 사용자와의 상호작용을 보존하기 위함이니 양해 부탁드립니다.
+5. uuid자체는 고유한 식별자일뿐이고 uuid로 얻는정보에따라서 uuid가 json형태로 숨길지 아닐지 정하는거임
+6. api-gateway 생성
+7. api-gateway 호출받는곳 생성
+8. OAuth2 Resource Server 의존성 주입하면 Spring Security는 자동이라 일단 잠구자
+9. 연결성 확인
+10. 프론트에서 요청하는거 구현
+11. 인증성공, 인증실패 테스트
+12. 관리자까지 확인 완료
+13.  URL 경로를 기반으로 하는 접근 제어
+14. hasRole과 hasAuthority 차이점?
+15. 롤 구분 했어 realms_access.roles 까지 들어가서 해당 롤을 추출해오는방식
+16. userprofile 서버 로직 분리하자
+17. admin에서 admin role로 연결확인
+18. 크롬 시크릿모드 성공
+서버 사이드 권환관리
+--------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------
 ## 주요 기능
 - JWT 기반 인증 및 권한 관리
 - 사용자 역할에 따른 접근 제어 (RBAC)
