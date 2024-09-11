@@ -58,6 +58,25 @@
         "attributes": {}
       },
       {
+        "id": "16271d54-3f9e-4f76-8080-529142107b05",
+        "name": "user",
+        "description": "User Role",
+        "composite": true,
+        "composites": {
+          "client": {
+            "service-client": [
+              "client-user"
+            ],
+            "account": [
+              "delete-account"
+            ]
+          }
+        },
+        "clientRole": false,
+        "containerId": "3b857ae3-3628-45fb-8536-cc389ca1b5fa",
+        "attributes": {}
+      },
+      {
         "id": "b0f76529-2a76-40f5-ac6a-7e27b1dc672f",
         "name": "default-roles-miniblog-realm",
         "description": "${role_default-roles}",
@@ -97,25 +116,6 @@
           "client": {
             "admin-client": [
               "admin-only"
-            ]
-          }
-        },
-        "clientRole": false,
-        "containerId": "3b857ae3-3628-45fb-8536-cc389ca1b5fa",
-        "attributes": {}
-      },
-      {
-        "id": "cbd05dbf-22fb-43fa-9ed4-8ef76b42802a",
-        "name": "user",
-        "description": "User Role",
-        "composite": true,
-        "composites": {
-          "client": {
-            "service-client": [
-              "client-user"
-            ],
-            "account": [
-              "delete-account"
             ]
           }
         },
