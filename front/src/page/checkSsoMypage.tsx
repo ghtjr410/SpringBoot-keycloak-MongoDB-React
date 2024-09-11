@@ -18,7 +18,7 @@ const CheckSsoMypage:React.FC<Props> = ({keycloak}) => {
           const userId = keycloak.subject; // Keycloak에서 UUID 추출
           const token = keycloak.token; // Keycloak 토큰 추출
           try {
-            const response = await axios.get(`http://localhost:8080/api/user-profile/${userId}`, {
+            const response = await axios.get(`http://localhost:8080/api/user/user-profile/${userId}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -28,21 +28,23 @@ const CheckSsoMypage:React.FC<Props> = ({keycloak}) => {
             console.error('GET Error:', error);
           }
         }
-      };
+    };
     
-      const handlePostUserProfile = async () => {
+    const handlePostUserProfile = async () => {
         if (keycloak?.authenticated) {
-          const userId = keycloak.subject; // Keycloak에서 UUID 추출
-          try {
-            const response = await axios.post(`http://localhost:8080/api/user-profile/${userId}`, {
-              bio: '안녕하세요, 이것은 새로운 bio입니다.',
-            });
-            console.log('POST Response:', response.data);
-          } catch (error) {
-            console.error('POST Error:', error);
-          }
+            const userId = keycloak.subject; // Keycloak에서 UUID 추출
+            const token = keycloak.token; // Keycloak 토큰 추출
+            try {
+                const response = await axios.post(`http://localhost:8080/api/user/user-profile/${userId}`, 
+                    { bio: '안녕하세요, 이것은 새로운 bio입니다.' },
+                    { headers: { Authorization: `Bearer ${token}` } } // 토큰 추가
+                );
+                console.log('POST Response:', response.data);
+            } catch (error) {
+                console.error('POST Error:', error);
+            }
         }
-      };
+    };
 
 
     const handleSignout = () => {

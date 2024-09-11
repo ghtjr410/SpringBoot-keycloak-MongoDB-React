@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/user-profile/{uuid}")
+@RequestMapping("/api/user/user-profile/{uuid}")
 @RequiredArgsConstructor
 public class UserprofileController {
 
